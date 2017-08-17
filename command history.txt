@@ -1,0 +1,53 @@
+$ rvm default 2.4.1 
+$ rvm install ruby-2.4.1 
+$ gem install rails
+$ rails new venmo
+$ cd venmo
+$ rails g model Group name:string
+$ rails g model User name:string
+$ rails g model Link group_id:integer user_id:integer
+    Group
+        has_many :links
+        has_many :users, through: :links
+    User
+        has_many :links
+        has_many :groups, through: :links
+    Link
+        belongs_to :user
+        belongs_to :group
+
+$ rails console
+> user = User.create(name: 'Mike')
+> group = Group.create(name: 'Hufflepuff')
+> Link.create(group: group, user: user)
+> user = User.create(name: 'Leo')
+> user.groups << group
+
+$ rails g migration AddNicknameToUser nickname:string  
+$ rails g model Transaction amount:integer description:text user_id:integer group_id:integer
+    Group
+        has_many :links
+        has_many :users, through: :links
+        has_many :transactions
+    User
+        has_many :links
+        has_many :groups, through: :links
+        has_many :transactions
+    Link
+        belongs_to :group
+        belongs_to :user
+    Transaction
+        belongs_to :user
+        belongs_to :group
+        
+$ rails console
+> Transaction.create(amount: 100, description: 'Hello', user: User.find_by_name('Leonard'
+), group: Group.find_by_name('Sly'))
+
+
+leo.groupname('Sly').balance
+leo.balance(group: 'Sly')
+
+1. Validations
+2. Dependence deletion
+3. Convenience methods
